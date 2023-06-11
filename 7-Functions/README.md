@@ -1,4 +1,4 @@
-# JS-Fundamentals-2
+# A Closer Look at Functions
 
 These are the topics covered :
 
