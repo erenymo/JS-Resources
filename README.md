@@ -1,3 +1,3 @@
 # JS-Resources
 
-My JS resources that I have created during learning JS
+My codes and notes while learning JavaScript and Web Programming. I'm constantly updating this repository. 

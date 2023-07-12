@@ -1,5 +1,5 @@
-# JS-Fundamentals-2
+# A Closer Look at Functions
 
 These are the topics covered :
 
-Strict Mode, Functions, Function declarations vs. expressions, Arrow Functions, Arrays, Array Operations(Methods), Introduction to Object, Object Methods, For Loop, While Loop, Loops in Loops
+Default Parameters, How Passing Arguments Works: Value vs. Reference, First-Class and Higher-Order Functions, Callback Functions, Functions Returning Functions, The call, apply and bind method, Immediately Invoked Function Expressions(IIFE), Closures
