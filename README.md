@@ -1,3 +1,3 @@
 # JS-Resources
 
-My codes and notes while learning JavaScript and Web Programming. I'm constantly updating this repository. 
+My codes and notes while learning JavaScript. I'm constantly updating this repository. 
