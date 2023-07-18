@@ -7,6 +7,11 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const navLink = document.querySelector('.nav__link');
+const section1 = document.querySelector('#section--1');
+const section2 = document.querySelector('#section--2');
+const section3 = document.querySelector('#section--3');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -28,6 +33,112 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModal();
   }
+});
+
+///// Implementing Smooth Scrolling
+btnScrollTo.addEventListener('click', function (e) {
+  const s1coords = section1.getBoundingClientRect(); // get the coordinates of the element that we want to scroll to
+  console.log(s1coords);
+  // getBoundingClientRect() is basically relative to visible viewport.
+  console.log(e.target.getBoundingClientRect()); // e.target returns the element that triggered the event (btnScrollTo)
+  console.log(
+    'Current scroll (X/Y) : ',
+    window.pageXOffset,
+    window.pageYOffset
+  ); // pageYOffSet returns the distance between current position of viewport and top of the page.
+
+  console.log(
+    'height/width of viewport : ',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // ); // this doesn't work very well because it relative to viewport
+
+  // // Implementing smoothness in old way
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // Much modern way
+  section1.scrollIntoView({
+    behavior: 'smooth',
+  });
+});
+
+///////////////////////////////////////////////////////////
+// Page navigation
+
+// this way creates the event repeatedly (if you have 10000 elements, then it creates 10000 event), so it is not efficient.
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+
+//     const id = this.getAttribute('href');
+//     console.log(id);
+
+//     document.querySelector(id).scrollIntoView({
+//       behavior: 'smooth',
+//     });
+//   });
+// });
+
+// nicer way
+
+// EVENT DELEGATION
+// in Event delegation, you only create one event to parent element, and just specify the elements that you want to use the event on it.
+
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the event
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  // console.log(e.target);
+  e.preventDefault();
+
+  // Matching strategy
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    console.log(id);
+
+    document.querySelector(id).scrollIntoView({
+      behavior: 'smooth',
+    });
+  }
+});
+
+// Tabbed component
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+// BAD PRACTICE
+// tabs.forEach(t => t.addEventListener('click', () => console.log('TAB')));
+
+// BEST PRACTICE (EVENT DELEGATION)
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+
+  // Guard clause
+  if (!clicked) return; // to ignore the adding class to null
+
+  // Remove active classes
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  // Activate tab
+  clicked.classList.add('operations__tab--active');
+
+  // Activate content area
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
 });
 
 ///////////////////////////////////////////////////////////
@@ -130,49 +241,6 @@ logo.classList.contains('c'); // not includes
 logo.className = 'jonas'; // this will delete all the classes and replace with 'jonas'
 */
 
-///// Implementing Smooth Scrolling
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const navLink = document.querySelector('.nav__link');
-const section1 = document.querySelector('#section--1');
-const section2 = document.querySelector('#section--2');
-const section3 = document.querySelector('#section--3');
-
-btnScrollTo.addEventListener('click', function (e) {
-  const s1coords = section1.getBoundingClientRect(); // get the coordinates of the element that we want to scroll to
-  console.log(s1coords);
-  // getBoundingClientRect() is basically relative to visible viewport.
-  console.log(e.target.getBoundingClientRect()); // e.target returns the element that triggered the event (btnScrollTo)
-  console.log(
-    'Current scroll (X/Y) : ',
-    window.pageXOffset,
-    window.pageYOffset
-  ); // pageYOffSet returns the distance between current position of viewport and top of the page.
-
-  console.log(
-    'height/width of viewport : ',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-
-  // // Scrolling
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // ); // this doesn't work very well because it relative to viewport
-
-  // // Implementing smoothness in old way
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
-
-  // Much modern way
-  section1.scrollIntoView({
-    behavior: 'smooth',
-  });
-});
-
 /*
 ///////// Types of Events and Event handlers
 
@@ -195,6 +263,8 @@ setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
 //   alert('onmouseenter: Great! You are reading the heading :D');
 // };
 */
+
+/*
 /////////// EVENT PROPAGATION : BUBBLING AND CAPTURING
 
 // Creating Random Color rgb(255,255,255);
@@ -226,3 +296,36 @@ document.querySelector('.nav').addEventListener(
   }
   //true
 ); // if the third parameters of addEventListener is true, event handler will no longer listen bubbling events, but instead listen capturing events.
+*/
+/*
+/////////// DOM Traversing
+const h1 = document.querySelector('h1');
+
+// Going downwards: selecting child elements.
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+// Going upwards : selecting parent elements
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gradient-secondary)'; // It selected the closest header to h1
+h1.closest('h1').style.background = 'var(--gradient-primary)'; // It selected itself.
+
+// closest can be think as querySelector => closest is the opposite of querySelector. Queryselector find the children no matter how it deep in dom tree while the closest method find the parents no matter how far up in dom tree
+
+// Going sideways : selecting siblings
+console.log(h1.previousElementSibling); //null
+console.log(h1.nextElementSibling); //h4 element
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+console.log(h1.parentElement.children); // all of siblings and itself.
+[...h1.parentElement.children].forEach(function (el) {
+  if (el !== h1) el.style.transform = 'scale(0.5)';
+});
+*/
