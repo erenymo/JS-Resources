@@ -61,3 +61,22 @@ console.log(eren.species, nuris.species); // species property is not directly in
 
 console.log(eren.hasOwnProperty('firstName')); // true (it is directly declared in the object)
 console.log(eren.hasOwnProperty('species')); // false. (it is not directly in the object (not own property))
+
+// prototype chain
+console.log(eren.__proto__);
+console.log(eren.__proto__.__proto__); // prototype property of object (top of the prototype chain)
+console.log(eren.__proto__.__proto__.__proto__); // null
+
+console.dir(Person.prototype.constructor); // we get the function itself
+
+const arr = [3, 4, 4, 4, 1, 1, 3]; // new Array === [] (Array constructor)
+console.log(arr.__proto__);
+console.log(arr.__proto__ === Array.prototype); // true
+
+console.log(arr.__proto__.__proto__);
+
+Array.prototype.unique = function () {
+  return [...new Set(this)];
+};
+
+console.log(arr.unique());
