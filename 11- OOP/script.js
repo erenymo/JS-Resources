@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 //////////////////////////////////////////////////
 ///// Constructor Functions and the new operator
 
@@ -80,3 +80,83 @@ Array.prototype.unique = function () {
 };
 
 console.log(arr.unique());
+
+const h1 = document.querySelector('h1');
+console.dir(h1);
+console.dir(x => x + 1);
+
+*/
+
+/*
+////////////////////////////////////////////////
+// Coding Challenge #1
+
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+  console.log(`${this.make} going at ${this.speed} km/h at the beginning`);
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.make} going at ${this.speed} km/h`);
+};
+
+Car.prototype.break = function () {
+  this.speed -= 5;
+  console.log(`${this.make} going at ${this.speed} km/h`);
+};
+
+// test
+
+const BMW = new Car('BMW', 120);
+const Mercedes = new Car('Mercedes', 95);
+
+BMW.accelerate();
+BMW.break();
+
+Mercedes.accelerate();
+Mercedes.break();
+*/
+
+////////////////////////////
+//// ES6 Classes
+
+// Cl stands for class
+
+// Class expression
+// const PersonCl = class {};
+
+// Class declaration
+class PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Outside of constructor will be on the prototype of the objects, not on the objects themself.
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2023 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+}
+// PersonCl.prototype.greet = function () {
+//   console.log(`Hey ${this.firstName}`);
+// };
+
+const sule = new PersonCl('Sulenur', 2003);
+console.log(sule);
+sule.calcAge();
+
+console.log(sule.__proto__ === PersonCl.prototype); // true
+
+sule.greet();
+
+////// NOTES
+// 1. Classes are NOT hoisted.
+// 2. Class are first-class citizes
+// 3. Classes are executed in strict mode
