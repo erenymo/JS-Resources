@@ -33,6 +33,16 @@ const nuris = new Person('Nuris', 2001);
 console.log(mustafa, nuris);
 console.log(eren instanceof Person);
 
+//// static method
+// it is not in prototype, so it cannot be read by instances
+Person.hey = function () {
+  console.log('Hey there 👋');
+  console.log(this); // entire constructor function
+};
+
+Person.hey();
+// eren.hey(); // cannot use hey function because it is not in prototype.
+
 // const jay = 'Jay';
 // console.log(jay instanceof Person);
 
@@ -84,9 +94,7 @@ console.log(arr.unique());
 const h1 = document.querySelector('h1');
 console.dir(h1);
 console.dir(x => x + 1);
-
 */
-
 /*
 ////////////////////////////////////////////////
 // Coding Challenge #1
@@ -118,7 +126,7 @@ BMW.break();
 Mercedes.accelerate();
 Mercedes.break();
 */
-
+/*
 ////////////////////////////
 //// ES6 Classes
 
@@ -129,11 +137,12 @@ Mercedes.break();
 
 // Class declaration
 class PersonCl {
-  constructor(firstName, birthYear) {
-    this.firstName = firstName;
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
     this.birthYear = birthYear;
   }
 
+  //// Instance methods
   // Outside of constructor will be on the prototype of the objects, not on the objects themself.
   // Methods will be added to .prototype property
   calcAge() {
@@ -143,20 +152,134 @@ class PersonCl {
   greet() {
     console.log(`Hey ${this.firstName}`);
   }
+
+  get age() {
+    return 2023 - this.birthYear;
+  }
+
+  // Set a property that already exists
+  set fullName(name) {
+    console.log(name);
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  //// Static method
+  static hey() {
+    console.log('Hey There 👋');
+    console.log(this);
+  }
 }
 // PersonCl.prototype.greet = function () {
 //   console.log(`Hey ${this.firstName}`);
 // };
 
-const sule = new PersonCl('Sulenur', 2003);
+const sule = new PersonCl('Sulenur Durgut', 2003);
 console.log(sule);
 sule.calcAge();
+console.log(sule.age);
 
 console.log(sule.__proto__ === PersonCl.prototype); // true
 
 sule.greet();
 
+PersonCl.hey();
+
 ////// NOTES
 // 1. Classes are NOT hoisted.
 // 2. Class are first-class citizes
 // 3. Classes are executed in strict mode
+
+//////////// Setters and Getters
+
+// they are basically a function that gets or sets a value
+
+const walter = new PersonCl('Walter White', 1965);
+
+const account = {
+  owner: 'eren',
+  movements: [200, 530, 120, 500],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  // any setter method needs to have exactly one parameter
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+console.log(account.latest);
+
+account.latest = 50;
+console.log(account.movements);
+*/
+/*
+///////// Object.create
+
+const PersonProto = {
+  calcAge() {
+    console.log(2023 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto); // steven's prototype is now PersonProto
+console.log(steven);
+steven.name = 'Steven';
+steven.birthYear = 2002;
+steven.calcAge();
+
+console.log(steven.__proto__ === PersonProto); // True
+
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1979);
+sarah.calcAge();
+*/
+
+/////////////////////////////////////////////
+// Coding Challenge #2
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+    console.log(`${this.make} going at ${this.speedUS} mi/h`);
+  }
+
+  break() {
+    this.speed -= 5;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+    console.log(`${this.make} going at ${this.speedUS} mi/h`);
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed = speed * 1.6; // mph to kmh
+    return this.speed;
+  }
+}
+
+const ford = new CarCl('Ford', 120);
+ford.accelerate();
+ford.speedUS = 120;
+ford.accelerate();
+ford.break();
+ford.accelerate();
+console.log(ford.speedUS);
