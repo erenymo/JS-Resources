@@ -244,7 +244,7 @@ const sarah = Object.create(PersonProto);
 sarah.init('Sarah', 1979);
 sarah.calcAge();
 */
-
+/*
 /////////////////////////////////////////////
 // Coding Challenge #2
 
@@ -283,3 +283,93 @@ ford.accelerate();
 ford.break();
 ford.accelerate();
 console.log(ford.speedUS);
+*/
+
+/*
+/////////////////////////////////////////
+// Inheritance between 'Classes': Constructor functions
+
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2023 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+//Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName}, I study ${this.course}`);
+};
+
+const eren = new Student('Eren', 2002, 'Management Information Systems');
+eren.introduce();
+eren.calcAge();
+
+console.log(eren.__proto__);
+console.log(eren.__proto__.__proto__);
+
+console.log(eren instanceof Student); // true
+console.log(eren instanceof Person); // true because we linked the prototypes
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor);
+*/
+
+/////////////////////////////////////////////
+// Coding Challenge #3
+
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+const EV = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+
+  console.log(
+    `'${this.make}' going at ${this.speed} km/h, with a charge of ${this.charge}%`
+  );
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`'${this.make}' going at ${this.speed} km/h`);
+};
+
+Car.prototype.break = function () {
+  this.speed -= 5;
+  console.log(`'${this.make}' going at ${this.speed} km/h`);
+};
+
+// Linking prototypes
+EV.prototype = Object.create(Car.prototype);
+
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+  console.log(`${this.make} is charged to ${chargeTo}%`);
+};
+
+EV.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 1;
+
+  console.log(
+    `'${this.make}' going at ${this.speed} km/h, with a charge of ${this.charge}%`
+  );
+};
+
+const tesla = new EV('Tesla', 120, 50);
+tesla.accelerate();
+tesla.chargeBattery(90);
+tesla.accelerate();
+tesla.break();
