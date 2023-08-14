@@ -2,7 +2,7 @@
 
 My codes and notes while learning JavaScript. I'm constantly updating this repository. 
 
-#These are the projects that I created during the learning process step by step : 
+# These are the projects that I created during the learning process step by step : 
 
 - Simple Number Guess Game : [Click Here](https://erenymo.github.io/Simple-Number-Guess-Game/)
 - The Pig Game : [Click Here](https://erenymo.github.io/5-Pig-Game/)
