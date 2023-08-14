@@ -1,4 +1,4 @@
-# Advanced DOM and Events
+# OOP in Javascript
 
 These are the topics covered :
 
