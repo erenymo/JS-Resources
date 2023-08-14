@@ -324,6 +324,7 @@ Student.prototype.constructor = Student;
 console.dir(Student.prototype.constructor);
 */
 
+/*
 /////////////////////////////////////////////
 // Coding Challenge #3
 
@@ -373,6 +374,7 @@ tesla.accelerate();
 tesla.chargeBattery(90);
 tesla.accelerate();
 tesla.break();
+*/
 
 /*
 ///////////////////////////////////////////////
@@ -478,45 +480,137 @@ jay.introduce();
 console.log(jay);
 */
 
+/*
+// 1- Public fields : field as a property that will be on all instances
+// 2- Private fields : properties that not accesible from outside
+// 3- Private methods
+// 4- Public methods
+// (there is also the static version)
 class Account {
+  // 1- Public Fields (instances)
+  locale = navigator.language;
+
+  // 2- Private Fields (# makes property private)
+  #movements = [];
+  #pin; // pin is needed on constructor
+
   constructor(owner, currency, pin) {
     this.owner = owner;
     this.currency = currency;
-    this.pin = pin;
-    this.movements = []; // this property is same at the beginning of every object
-    this.local = navigator.language;
+    // Protected property
+    this.#pin = pin;
+    // this._movements = []; // this property is same at the beginning of every object
+    // this.local = navigator.language;
 
     console.log(`Thanks for opening an account, ${owner}`);
   }
 
+  // 3- Public Methods
   // Public Interface
+  getMovements() {
+    return this.#movements;
+  }
+
   deposit(val) {
-    this.movements.push(val);
+    this.#movements.push(val);
+    return this;
   }
 
   withdraw(val) {
     this.deposit(val);
-  }
-
-  approveLoan(val) {
-    return true;
+    return this;
   }
 
   requestLoan(val) {
-    if (this.approveLoan(val)) {
+    if (this._approveLoan(val)) {
       this.deposit(val);
       console.log(`Loan approved`);
+      return this;
     }
+  }
+
+  // Static methods : will not be available on the instances, but only on the class
+  static helper() {
+    console.log('Helper');
+  }
+
+  // 4- Private Methods
+  // #approveLoan(val) {
+  _approveLoan(val) {
+    return true;
   }
 }
 
 const acc1 = new Account('Eren', 'TRY', 1111);
 
-// acc1.movements.push(250);
-// acc1.movements.push(-140);
+// acc1._movements.push(250);
+// acc1._movements.push(-140);
 acc1.deposit(250);
 acc1.withdraw(140);
 acc1.requestLoan(1000);
-
+console.log(acc1.getMovements());
 console.log(acc1);
-console.log(acc1.pin);
+Account.helper();
+
+// console.log(acc1.#movements);
+// console.log(acc1.#pin);
+// console.log(acc1.#approveLoan(100));
+
+// Chaining
+acc1.deposit(300).deposit(500).withdraw(350).requestLoan(25000).withdraw(4000);
+console.log(acc1);
+*/
+
+/////////////////////////////////////
+// Coding Challenge #4
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+  }
+
+  break() {
+    this.speed -= 5;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+    return this;
+  }
+}
+
+class EVCl extends CarCl {
+  #charge;
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+    console.log(
+      `${this.make} going at ${this.speed} km/h, with charge of ${
+        this.#charge
+      }%`
+    );
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge -= 1;
+    console.log(
+      `${this.make} going at ${this.speed} km/h, with charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+
+  chargeBattery(val) {
+    this.#charge = val;
+    return this;
+  }
+}
+
+const rivian = new EVCl('Rivian', 120, 23);
+
+rivian.accelerate().break().accelerate().chargeBattery(70).accelerate();
