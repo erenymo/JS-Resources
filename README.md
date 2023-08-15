@@ -2,7 +2,7 @@
 
 My codes and notes while learning JavaScript. I'm constantly updating this repository. 
 
-# These are the projects that I created during the learning process step by step : 
+### These are the projects that I created during the learning process step by step : 
 
 In addition, these projects focused on the Javascript fundamentals. So, they are not mobile responsive, please check them on desktop ^^.
 
