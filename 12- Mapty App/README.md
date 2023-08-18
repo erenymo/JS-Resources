@@ -1,5 +1,5 @@
-# Numbers, Dates, Intl and Timers
+# Mapty App
 
 These are the topics covered :
 
-Converting and Checking Numbers, Math and Rounding, The Remainder Operator, Numeric Seperators, Working with BigInt, Creating Dates, Adding Dates to 'Bankist App', Operations with Dates, Internationalizing Dates(Intl) and Numbers(Intl), Timers: setTimeout and setInterval, Implemeting a Countdown Timer
+How to Plan a Web Project, Using the Geolocation API, Using Leaflet Libray, Working with localStorage
