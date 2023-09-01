@@ -272,3 +272,126 @@ const whereAmI = function (lat, lng) {
 
 whereAmI(-33.933, 18.474);
 */
+
+/*
+/////////////////////////////////////////
+// Event Loop in practice
+
+console.log('Test start');
+
+setTimeout(() => console.log('0 sec timer'), 0);
+
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+
+Promise.resolve('Resolved promise 2').then(res => {
+  for (let i = 0; i < 1000000000; i++) {}
+  console.log(res);
+});
+
+console.log('Test end');
+*/
+
+/*
+// Promise constructor takes exactly 1 argument which is called executer function
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('Lotter draw is happening');
+
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You WIN 💰');
+    } else {
+      reject(new Error('You lost your money 💥'));
+    }
+  }, 2000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+*/
+
+/*
+
+// Promisifying setTimeout
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log('1 sec passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 sec passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 sec passed');
+    return wait(1);
+  })
+  .then(() => console.log('4 sec passed'));
+
+// setTimeout(() => {
+//   console.log('1 sec passed');
+//   setTimeout(() => {
+//     console.log('2 sec passed');
+//     setTimeout(() => {
+//       console.log('3 sec passed');
+//       setTimeout(() => {
+//         console.log('4 sec passed');
+//       }, 1000);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+Promise.resolve('abc').then(x => console.log(x));
+Promise.reject(new Error('Problem!')).catch(x => console.error(x));
+*/
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   err => reject(err)
+    // );
+
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+getPosition().then(pos => console.log(pos));
+
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+
+      return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    })
+    .then(res => {
+      return res.json();
+    })
+    .then(data => {
+      if (data.city === 'Throttled! See geocode.xyz/pricing')
+        throw new Error(`Problem with geocoding`);
+      console.log(data);
+      console.log(`You are in ${data.city}, ${data.country}`);
+
+      return fetch(
+        `https://countries-api-836d.onrender.com/countries/name/${data.country}`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Country not found ${res.status}`);
+
+      return res.json();
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(err => console.error(`${err.message}`))
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', whereAmI);
