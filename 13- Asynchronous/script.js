@@ -29,6 +29,14 @@ const renderError = function (msg) {
   countriesContainer.style.opacity = 1;
 };
 
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} ${response.status}`);
+
+    return response.json();
+  });
+};
+
 ///////////////////////////////////////
 /*
 const getCountryData = function (country) {
@@ -458,6 +466,242 @@ createImage('img/img-1.jpg')
   .catch(err => console.error(err));
 */
 
+/*
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   err => reject(err)
+    // );
+
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+////// async function always returns promise !
+////// always use try catch with async function !
+const whereAmI = async function (country) {
+  try {
+    // Geolocation
+    const pos = await getPosition();
+
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // Reverse geocoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!resGeo.ok) throw new Error('Problem getting location data');
+
+    const dataGeo = await resGeo.json();
+
+    // Country data
+
+    // old way
+    // fetch(
+    //   `https://countries-api-836d.onrender.com/countries/name/${country}`
+    // ).then(res => console.log(res));
+
+    // new way
+    const res = await fetch(
+      `https://countries-api-836d.onrender.com/countries/name/${dataGeo.country}`
+    );
+    if (!res.ok) throw new Error('Problem getting country');
+
+    const data = await res.json();
+
+    renderCountry(data[0]);
+
+    return `You are in ${dataGeo.city}, ${dataGeo.country}`; // will become the fulfilled value of the promise
+  } catch (err) {
+    console.error(err);
+    renderError(`${err.message}`);
+
+    // Reject promise returned from async function
+    throw err;
+  }
+};
+
+console.log('1: Will get location');
+
+// const city = whereAmI();
+// console.log(city);
+////// async function always returns promise and the return value is the fulfilled value of the promise.
+
+// whereAmI()
+//   .then(city => console.log(`2: ${city}`))
+//   .catch(err => console.error(`2: ${err.message}`))
+//   .finally(() => console.log('3: Finished getting location'));
+
+(async function () {
+  try {
+    const city = await whereAmI();
+    console.log(city);
+  } catch (err) {
+    console.error(err.message);
+  }
+
+  console.log('3: Finished getting location');
+})();
+*/
+
+/*
+////// Promise combinator: Promise.all()
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(
+    //   `https://countries-api-836d.onrender.com/countries/name/${c1}`
+    // );
+    // const [data2] = await getJSON(
+    //   `https://countries-api-836d.onrender.com/countries/name/${c2}`
+    // );
+    // const [data3] = await getJSON(
+    //   `https://countries-api-836d.onrender.com/countries/name/${c3}`
+    // );
+    // console.log(data1.capital, data2.capital, data3.capital);
+
+    //// Promise.all() = whenever you have a situation in which you need to do multiple async operations at the same time and operations that don't depend on one another, then you should always run them in parallel using Promise.all()
+    const data = await Promise.all([
+      getJSON(`https://countries-api-836d.onrender.com/countries/name/${c1}`),
+      getJSON(`https://countries-api-836d.onrender.com/countries/name/${c2}`),
+      getJSON(`https://countries-api-836d.onrender.com/countries/name/${c3}`),
+    ]);
+
+    console.log(data);
+    console.log(data.map(d => d[0].capital));
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+get3Countries('portugal', 'turkey', 'canada');
+*/
+
+/*
+// Promise.race : promises will race at each other and the winning one will be returned and it doesn't matter if it is fulfilled or rejected
+(async function () {
+  // returns one result
+  const res = await Promise.race([
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/italy`),
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/turkey`),
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/poland`),
+  ]);
+  console.log(res[0]);
+})();
+
+const timeout = function (sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error('request took too long !'));
+    }, sec * 1000);
+  });
+};
+Promise.race([
+  getJSON(`https://countries-api-836d.onrender.com/countries/name/tanzania`),
+  timeout(0.2),
+])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err.message));
+*/
+
+/*
+// Promise.allSettled
+Promise.allSettled([
+  Promise.resolve('success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('another success'),
+]).then(res => console.log(res));
+
+Promise.all([
+  Promise.resolve('success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('another success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+
+// Promise.any [ES2021] : ignores the rejected promises and returns first fulfilled promise
+Promise.any([
+  Promise.reject('ERROR'),
+  Promise.resolve('any : success'),
+  Promise.resolve('any : another success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+*/
+
+/*
+///////////////////////////////////////////////////
+/// Coding Challenge #3
+
+const imgContainer = document.querySelector('.images');
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
+
+    img.addEventListener('load', function () {
+      imgContainer.append(img);
+      resolve(img);
+    });
+
+    img.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
+  });
+};
+
+/// PART 1
+
+//let currentImg; // dont need to external variable
+
+const loadNpause = async function () {
+  try {
+    let img = await createImage('img/img-1.jpg');
+
+    console.log('Image 1 loaded');
+    await wait(2);
+    img.style.display = 'none';
+
+    img = await createImage('img/img-2.jpg');
+
+    console.log('Image 2 loaded');
+    await wait(2);
+    img.style.display = 'none';
+
+    img = await createImage('img/img-3.jpg');
+
+    console.log('Image 3 loaded');
+    await wait(2);
+    img.style.display = 'none';
+  } catch (err) {
+    console.error(err);
+  }
+};
+// loadNpause();
+
+/// PART 2
+const loadAll = async function (imgArr) {
+  try {
+    const imgs = imgArr.map(async img => await createImage(img));
+
+    const imgsEl = await Promise.all(imgs);
+
+    imgsEl.forEach(img => img.classList.add('parallel'));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
+*/
+
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
     // navigator.geolocation.getCurrentPosition(
@@ -481,7 +725,6 @@ const whereAmI = async function (country) {
     if (!resGeo.ok) throw new Error('Problem getting location data');
 
     const dataGeo = await resGeo.json();
-    console.log(dataGeo);
 
     // Country data
 
@@ -497,22 +740,17 @@ const whereAmI = async function (country) {
     if (!res.ok) throw new Error('Problem getting country');
 
     const data = await res.json();
-    console.log(data);
 
     renderCountry(data[0]);
+
+    return `You are in ${dataGeo.city}, ${dataGeo.country}`; // will become the fulfilled value of the promise
   } catch (err) {
     console.error(err);
     renderError(`${err.message}`);
+
+    // Reject promise returned from async function
+    throw err;
   }
 };
 
-whereAmI();
-console.log('first');
-
-// try {
-//   let y = 1;
-//   const x = 2;
-//   y = 3;
-// } catch (err) {
-//   alert(err.message);
-// }
+btn.addEventListener('click', whereAmI);
