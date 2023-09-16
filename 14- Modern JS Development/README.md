@@ -1,6 +1,6 @@
 # Modern JavaScript Development: Modules, Tooling, and Functional
 
-These are the topics covered :
+::::::: These are the topics covered :::::::
 
 An Overview of Modern Javascript Development
 
