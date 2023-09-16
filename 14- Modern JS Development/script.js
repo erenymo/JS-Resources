@@ -24,7 +24,6 @@ ShoppingCart.addToCart("bread", 5);
 console.log(ShoppingCart.totalPrice, ShoppingCart.tq);
 */
 
-/*
 //// importing the default export and naming
 // import add, {addToCart,totalPrice as price,tq } from "./shoppingCart.js";  // WE CAN MIX THE EXPORTS BUT IT IS NOT ADVICIBLE
 // console.log(price);
@@ -33,7 +32,6 @@ add("milk", 2);
 add("bread", 3);
 add("apples", 7);
 console.log(cart);
-*/
 
 /*
 //// TOP-LEVEL await (it blocks the code)
@@ -109,8 +107,11 @@ export.addToCart = function (product, quantity) {
 // Import
 const { addToCart } = require('./shoppingCart.js')
 */
+//////////////////////////////////////////
+// Introduction to NPM
 
-import cloneDeep from "./node_modules/lodash-es/cloneDeep.js";
+// import cloneDeep from "./node_modules/lodash-es/cloneDeep.js";
+import cloneDeep from "lodash-es";
 
 const state = {
   cart: [
@@ -126,3 +127,31 @@ state.user.loggedIn = false;
 console.log(stateClone);
 
 console.log(stateDeepClone);
+
+// Whenever we change the one of modules, it updates page with the new code without reloading the page
+if (module.hot) {
+  module.hot.accept();
+}
+// However, this code should only be used during development and disabled in production environments because it is unnecessary for us to run non-interactive code in users' browsers.
+
+class Person {
+  greeting = "hey";
+  constructor(name) {
+    this.name = name;
+    console.log(`${this.greeting}, ${this.name}`);
+  }
+}
+
+const eren = new Person("Eren");
+
+console.log("Jonas" ?? null);
+
+console.log(cart.find((el) => el.quantity >= 2));
+Promise.resolve("TEST").then((x) => console.log(x));
+
+import "core-js/stable";
+// import "core-js/stable/array/find";
+// import "core-js/stable/promise";
+
+// Polifilling async functions
+import "regenerator-runtime/runtime";

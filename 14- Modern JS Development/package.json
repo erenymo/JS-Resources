@@ -2,14 +2,19 @@
   "name": "14--modern-js-development",
   "version": "1.0.0",
   "description": "",
-  "main": "clean.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "core-js": "^3.32.2",
     "leaflet": "^1.9.4",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "regenerator-runtime": "^0.14.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3"
   }
 }
