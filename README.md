@@ -10,3 +10,4 @@ In addition, these projects focused on the Javascript fundamentals. So, they are
 - The Pig Game : [Click Here](https://erenymo.github.io/5-Pig-Game/)
 - Bankist Web App (user: js pin: 1111; user: jd pin: 2222, user: stw pin: 3333, user: ss pin: 4444) : [Click Here](https://erenymo.github.io/bankist-website/)
 - Mapty App : [Click Here](https://erenymo.github.io/mapty-app/)
+- Forkify App: [Click Here](https://forkify-erenymo.netlify.app)
